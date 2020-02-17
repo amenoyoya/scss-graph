@@ -3,7 +3,12 @@ import {render} from 'react-dom';
 
 class App extends React.Component {
   render () {
-    return <div class="sample1"></div>;
+    return (
+        <div>
+            <div className="sample1"></div>
+            <div className="container"></div>
+        </div>
+    );
   }
 }
 
