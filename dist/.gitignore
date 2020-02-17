@@ -1,0 +1,4 @@
+# Webpackコンパイル後のassetデータはGit管理しない
+/css/
+/img/
+/js/
