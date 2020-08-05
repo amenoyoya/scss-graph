@@ -3,7 +3,7 @@ const MongoClient = mongodb.MongoClient;
 const assert = require('assert');
 
 const DB = {
-  host: '172.28.1.11', // docker-network:app_net
+  host: 'db', // service://db
   port: '27017',
   user: 'root',
   password: 'root',

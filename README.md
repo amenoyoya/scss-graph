@@ -6,53 +6,77 @@ Nuxt.js アプリ開発練習
 
 - OS:
     - Ubuntu 20.04
-- anyenv: 1.1.1
-    - nodenv: 1.3.2
-        - Node.js: 12.18.2
-        - yarn: 1.22.4
+- Docker: 19.03.12
+    - docker-compose: 1.26.0
 
 ### Setup
 ```bash
-# move to project directory
-$ cd app
+# add execution permission to node, npm, npx
+$ chmod +x n*
 
-# install node_packages
-$ yarn install
-
-# start development server
-$ yarn dev
-
-# => Listening on: http://localhost:3000
-```
-
-![buefy-nuxt-start.png](./img/buefy-nuxt-start.png)
-
-#### Setup detail (Remarks)
-```bash
-# install nodejs 12.18.2 by nodenv
-## nodenv: with nodenv-yarn-install plugin
-$ touch $(nodenv root)/default-packages
-$ noenv install 12.18.2
-
-# switch 12.18.2
-$ nodenv global 12.18.2
-
-# update package manager
-$ npm install -g npm
+# setup and start docker containers
+## node command: service://node
+## mongodb server: service://db => http://localhost:<random_port>
+## mongodb express server: service://admin => http://localhost:32776
+$ docker-compose up -d
 
 # create nuxt project => ./app/
-$ npx create-nuxt-app app
-## Project name: slack-clone
+## $ docker-compose run node npx create-nuxt-app app
+$ ./npx create-nuxt-app app
+## Project name: app
 ## Programming language: JavaScript
-## Package manager: Yarn
+## Package manager: Npm
 ## UI framework: Buefy
-## Nuxt.js modules: axios
+## Nuxt.js modules: Axios
 ## Linting tools: ESLint
 ## Testing framework: None
 ## Rendering mode: Universal (SSR / SSG)
-## Deployment target: Static (Static/JAMStack hosting)
+## Deployment target: Server (Node.js hosting)
 ## Development tools: jsconfig.json
 
 # remove app .git
 $ rm -rf app/.git
+
+# start nodejs server
+## $ docker-compose run --service-ports node npm run --prefix ./app/ dev
+$ ./npm run --prefix ./app/ dev
+
+# => Listening on: http://localhost:32775 => service://node:3000
 ```
+
+![buefy-nuxt-start.png](./img/buefy-nuxt-start.png)
+
+***
+
+## Tests
+
+### MongoDB from Node.js
+```bash
+# install node module: mongodb => service://node:/node_modules/
+## $ docker-compose run node npm i --prefix / mongodb
+$ ./npm i --prefix / mongodb
+
+# $ docker-compose run node node tests/mongodb.js
+$ ./node tests/mongodb.js
+
+connected
+Inserted 3 documents into the collection
+{
+  result: { ok: 1, n: 3 },
+  ops: [
+    { a: 1, _id: 5f2add9fd472a97a35c46942 },
+    { b: 2, _id: 5f2add9fd472a95424c46943 },
+    { c: 3, _id: 5f2add9fd472a97e8ec46944 }
+  ],
+  insertedCount: 3,
+  insertedIds: {
+    '0': 5f2add9fd472a97a35c46942,
+    '1': 5f2add9fd472a95424c46943,
+    '2': 5f2add9fd472a97e8ec46944
+  }
+}
+```
+
+http://localhost:32776/db/myDB/documents
+
+![mongodb.png](./tests/img/mongodb.png)
