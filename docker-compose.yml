@@ -1,0 +1,47 @@
+version: "3"
+
+networks:
+  app_net:
+    driver: bridge # コンテナ間はブリッジ接続
+    ipam:
+     driver: default
+     config:
+       - subnet: 172.28.1.0/24 # app_net: 172.28.1.0 network
+
+services:
+  # db service container: mongo db v4.4
+  db:
+    image: mongo:4.4
+    logging:
+      driver: json-file
+    # restart: always
+    ports:
+      # tcp://localhost:<random_port> => service://db:27017
+      - "27017"
+    networks:
+      app_net: # 172.28.1.0/24
+        # tcp://172.28.1.11:27017 => service://db:27017
+        ipv4_address: 172.28.1.11
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+      TZ: Asia/Tokyo
+
+  # admin service container: mongo-express:latest
+  admin:
+    image: mongo-express:latest
+    logging:
+      driver: json-file
+    # restart: always
+    links:
+      - db # link tcp://db => service://db
+    ports:
+      # http://localhost:32776 => service://admin:8081
+      - "32776:8081"
+    networks:
+      app_net: # 172.28.1.0/24: dbとlinkするために同一ネットワーク上に置く
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: root
+      ME_CONFIG_MONGODB_SERVER: db
+      TZ: Asia/Tokyo
