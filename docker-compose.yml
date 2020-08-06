@@ -15,8 +15,10 @@ services:
     links:
       - db # link tcp://db => service://db
     ports:
-      # http://localhost:32775 => service://node:3000
-      - "32775:3000"
+      # http://localhost:32774 => service://node:3000
+      - "32774:3000"
+      # http://localhost:32775 => service://node:3333
+      - "32775:3333"
     volumes:
       # ./package.json => service://node:/package.json (read + write)
       ## $ npm i --prefix '/' => module install in service://node:/node_modules/
@@ -27,10 +29,10 @@ services:
       - ./:/work/
     environment:
       TZ: Asia/Tokyo
-      # run nuxt server in http://0.0.0.0:3000
+      # run nuxt server in http://0.0.0.0:3333
       ## $ docker-compose run --service-ports node npm run --prefix ./app/ dev
       HOST: 0.0.0.0
-      PORT: 3000
+      PORT: 3333
 
   # db service container: mongo db v4.4
   db:

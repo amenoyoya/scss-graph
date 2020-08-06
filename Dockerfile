@@ -12,10 +12,8 @@ ENV PATH $PATH:/node_modules/.bin
 # create-nuxt-app コマンドをあらかじめ npm global install しておかないと $ npx create-nuxt-app が失敗する
 COPY package.json /
 COPY package-lock.json /
-RUN npm i -g create-nuxt-app && \
+RUN npm i -g create-nuxt-app json-server && \
     npm config set prefix / && npm install && npm cache clean --force
 
 # 作業ディレクトリ: ./ => service://node:/work/
 WORKDIR /work/
-
-EXPOSE 3000

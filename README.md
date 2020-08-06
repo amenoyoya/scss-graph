@@ -11,18 +11,19 @@ Nuxt.js アプリ開発練習
 
 ### Setup
 ```bash
-# add execution permission to node, npm, npx
-$ chmod +x n*
+# add execution permission to ./n
+$ chmod +x ./n
 
 # setup and start docker containers
 ## node command: service://node
 ## mongodb server: service://db => http://localhost:<random_port>
 ## mongodb express server: service://admin => http://localhost:32776
+$ docker-compose build
 $ docker-compose up -d
 
 # create nuxt project => ./app/
 ## $ docker-compose run node npx create-nuxt-app app
-$ ./npx create-nuxt-app app
+$ ./n npx create-nuxt-app app
 ## Project name: app
 ## Programming language: JavaScript
 ## Package manager: Npm
@@ -39,7 +40,7 @@ $ rm -rf app/.git
 
 # start nodejs server
 ## $ docker-compose run --service-ports node npm run --prefix ./app/ dev
-$ ./npm run --prefix ./app/ dev
+$ ./n npm run --prefix ./app/ dev
 
 # => Listening on: http://localhost:32775 => service://node:3000
 ```
@@ -54,10 +55,10 @@ $ ./npm run --prefix ./app/ dev
 ```bash
 # install node module: mongodb => service://node:/node_modules/
 ## $ docker-compose run node npm i --prefix / mongodb
-$ ./npm i --prefix / mongodb
+$ ./n npm i --prefix / mongodb
 
 # $ docker-compose run node node tests/mongodb.js
-$ ./node tests/mongodb.js
+$ ./n node tests/mongodb.js
 
 connected
 Inserted 3 documents into the collection
