@@ -18,6 +18,7 @@ $ chmod +x ./n
 ## node command: service://cli in localhost network
 ## mongodb server: service://db:27017 => http://localhost:27017
 ## mongodb express server: service://admin:8081 => http://localhost:8081
+## mongodb rest api server: service://restheart:8080 => http://localhost:8080
 $ export UID && docker-compose build
 $ docker-compose up -d
 
@@ -80,3 +81,47 @@ Inserted 3 documents into the collection
 http://localhost:8081/db/myDB/documents
 
 ![mongodb.png](./tests/img/mongodb.png)
+
+### Control MongoDB through Rest API Server
+```bash
+# install node_packages: axios
+$ opt='-w /work/tests/' ./n yarn add axios
+
+# execute node ./tests/mongodb.js
+$ opt='-w /work/tests/' ./n node restheart.js
+
+{
+  inserted: 3,
+  links: [
+    '/myDB/5f396422e169666ce2811160',
+    '/myDB/5f396422e169666ce2811161',
+    '/myDB/5f396422e169666ce2811162'
+  ],
+  deleted: 0,
+  modified: 0,
+  matched: 0
+}
+[
+  {
+    _id: { '$oid': '5f396422e169666ce2811160' },
+    _etag: { '$oid': '5f396422e169666ce281115f' },
+    a: 1
+  },
+  {
+    _id: { '$oid': '5f396422e169666ce2811161' },
+    _etag: { '$oid': '5f396422e169666ce281115f' },
+    b: 2
+  },
+  {
+    _id: { '$oid': '5f396422e169666ce2811162' },
+    _etag: { '$oid': '5f396422e169666ce281115f' },
+    c: 3
+  }
+]
+```
+
+RestHeart を使った場合、コレクション（データベース名）は restheart になる
+
+http://localhost:8081/db/restheart/myDB/
+
+![restheart.png](./tests/img/restheart.png)
