@@ -1,38 +1,30 @@
-version: "3"
+# ver 3.6 >= required: enable '-w' option for 'docker-compose exec'
+version: "3.6"
 
 volumes:
   # volume for db service container
   db-data:
 
 services:
-  # node service container: node:12-alpine
-  # $ docker-compose run node $command ...
-  node:
-    # build from ./Dockerfile
-    build: ./
+  # cli service container: node:12-alpine
+  # $ docker-compose exec cli $command ...
+  cli:
+    build:
+      context: ./ # build from ./Dockerfile
+      args:
+        # use current working user id
+        UID: $UID
     logging:
       driver: json-file
-    links:
-      - db # link tcp://db => service://db
-    ports:
-      # http://localhost:32774 => service://node:3000
-      - "32774:3000"
-      # http://localhost:32775 => service://node:3333
-      - "32775:3333"
+    # tcp://localhost:<port> => service://cli:<port>
+    network_mode: host
+    # enable terminal
+    tty: true
     volumes:
-      # ./package.json => service://node:/package.json (read + write)
-      ## $ npm i --prefix '/' => module install in service://node:/node_modules/
-      - ./package.json:/package.json:rw
-      - ./package-lock.json:/package-lock.json:rw
-      
       # ./ => service:node:/work/
       - ./:/work/
     environment:
       TZ: Asia/Tokyo
-      # run nuxt server in http://0.0.0.0:3333
-      ## $ docker-compose run --service-ports node npm run --prefix ./app/ dev
-      HOST: 0.0.0.0
-      PORT: 3333
 
   # db service container: mongo db v4.4
   db:
@@ -41,8 +33,8 @@ services:
       driver: json-file
     # restart: always
     ports:
-      # tcp://localhost:<random_port> => service://db:27017
-      - "27017"
+      # tcp://localhost:27017 => service://db:27017
+      - 27017:27017
     volumes:
       # database data persistence
       - db-data:/data/db/
@@ -58,12 +50,13 @@ services:
       driver: json-file
     # restart: always
     links:
-      - db # link tcp://db => service://db
+      - db
     ports:
-      # http://localhost:32776 => service://admin:8081
-      - "32776:8081"
+      # http://localhost:8081 => service://admin:8081
+      - 8081:8081
     environment:
       ME_CONFIG_MONGODB_ADMINUSERNAME: root
       ME_CONFIG_MONGODB_ADMINPASSWORD: root
-      ME_CONFIG_MONGODB_SERVER: db
+      ME_CONFIG_MONGODB_SERVER: db # service://db
+      ME_CONFIG_MONGODB_PORT: 27017
       TZ: Asia/Tokyo
