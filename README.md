@@ -22,12 +22,12 @@ $ chmod +x ./n
 $ export UID && docker-compose build
 $ docker-compose up -d
 
-# create nuxt project => ./app/
-## $ docker-compose run node npx create-nuxt-app app
-$ ./n npx create-nuxt-app app
-## Project name: app
+# create nuxt project => ./nuxt/
+## $ docker-compose run node npx create-nuxt-app nuxt
+$ ./n npx create-nuxt-app nuxt
+## Project name: slack-clone
 ## Programming language: JavaScript
-## Package manager: Npm
+## Package manager: Yarn
 ## UI framework: Buefy
 ## Nuxt.js modules: Axios
 ## Linting tools: ESLint
@@ -36,12 +36,9 @@ $ ./n npx create-nuxt-app app
 ## Deployment target: Server (Node.js hosting)
 ## Development tools: jsconfig.json
 
-# remove app .git
-$ rm -rf app/.git
-
 # start nodejs server
-## $ docker-compose exec -w /work/app/ cli yarn dev
-$ opt='-w /work/app/' ./n yarn dev
+## $ docker-compose exec -w /work/nuxt/ cli yarn dev
+$ opt='-w /work/nuxt/' ./n yarn dev
 
 # => Listening on: http://localhost:3000 => service://node:3000
 ```
